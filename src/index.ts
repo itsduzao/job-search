@@ -6,6 +6,13 @@ import { fetchEurecaJobs } from "./sources/eureca.js";
 import { fetchLinkedinJobs } from "./sources/linkedin.js";
 import { sendMessage, voteKeyboard } from "./notifier/telegram.js";
 import { collectFeedback, loadFeedback, sourcePrecision } from "./feedback.js";
+import {
+  loadDigest,
+  saveDigest,
+  enqueueDigest,
+  sendDigestIfDue,
+} from "./digest.js";
+import { RELEVANCE_THRESHOLD } from "./config.js";
 import type { Job } from "./job.js";
 
 interface Source {
@@ -45,6 +52,9 @@ async function main(): Promise<void> {
 
   let accepted = 0;
   let notified = 0;
+  let digested = 0;
+
+  const digestState = loadDigest();
 
   for (const job of allJobs) {
     const verdict = match(job);
@@ -54,17 +64,50 @@ async function main(): Promise<void> {
     const key = dedupKey(job);
     if (!isNew(state, key)) continue;
 
-    if (!token || !chatId) {
-      console.log("[dry-run]", formatJob(job));
-      continue;
-    }
+    const { score } = scoreJob(job);
 
-    await sendMessage(token, chatId, formatJob(job), voteKeyboard(job.source));
-    markNotified(state, key);
-    notified++;
+    if (score >= RELEVANCE_THRESHOLD) {
+      if (!token || !chatId) {
+        console.log("[dry-run]", formatJob(job));
+        continue;
+      }
+
+      await sendMessage(token, chatId, formatJob(job), voteKeyboard(job.source));
+      markNotified(state, key);
+      notified++;
+    } else {
+      if (!token || !chatId) {
+        console.log("[dry-run digest]", formatJob(job));
+        continue;
+      }
+
+      enqueueDigest(digestState, {
+        key,
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        url: job.url,
+        score,
+        source: job.source,
+        queuedAt: new Date().toISOString(),
+      });
+      markNotified(state, key);
+      digested++;
+    }
   }
 
   saveState(state);
+
+  let digestSent = 0;
+  if (token && chatId) {
+    saveDigest(digestState);
+    try {
+      const { sent } = await sendDigestIfDue(token, chatId);
+      digestSent = sent;
+    } catch (error) {
+      console.warn(`[digest] falha ao enviar: ${String(error)}`);
+    }
+  }
 
   if (failures.length === SOURCES.length && SOURCES.length > 0 && token && chatId) {
     await sendMessage(
@@ -98,6 +141,8 @@ async function main(): Promise<void> {
       fetched: allJobs.length,
       accepted,
       notified,
+      digested,
+      digestSent,
       failures,
       feedback,
     }),

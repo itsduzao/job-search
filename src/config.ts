@@ -53,6 +53,8 @@ export const BACKEND_TERMS = [
 
 export const TYPESCRIPT = ["typescript", "type script"];
 
+export const RELEVANCE_THRESHOLD = 7;
+
 export const FRONTEND_SIGNALS = [
   "frontend",
   "front end",

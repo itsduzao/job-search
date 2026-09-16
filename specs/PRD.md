@@ -65,10 +65,11 @@ Homônimos tratados: `São José dos Campos`, `São José do Rio Preto`, `São J
 | Fonte | Fase | Status |
 |---|---|---|
 | GitHub (backend-br/vagas e similares) | 1 (MVP) | Implementada |
-| Eureca | 1 (MVP) | Stub — task de implementação |
-| SIARE/UFSC | 2 | Manual (login/portal) |
-| FEPESE | 2 | Manual (editais/PDF) |
-| LinkedIn | 2 | Endpoint não-oficial (risco documentado) |
+| Eureca | 1 (MVP) | Implementada |
+| LinkedIn | 2 | Implementada (guest endpoint, risco documentado) |
+| FEPESE (vagas) | 2 | Automatizável via WordPress REST (`/wp-json/wp/v2/vaga`) — backlog B6 |
+| SIARE/UFSC | 2 | Manual (login/portal) — ver `specs/manual-sources.md` |
+| FEPESE (concursos/editais) | 2 | Manual (PDF) — ver `specs/manual-sources.md` |
 
 **Regra de fallback:** fonte quebrada é registrada no log e não derruba o ciclo; só alerta no Telegram se **todas** as fontes falharem.
 

@@ -1,9 +1,11 @@
 import { loadState, saveState, isNew, markNotified, dedupKey } from "./dedup.js";
 import { match } from "./matcher.js";
+import { scoreJob } from "./scoring.js";
 import { fetchGithubJobs } from "./sources/github-lists.js";
 import { fetchEurecaJobs } from "./sources/eureca.js";
 import { fetchLinkedinJobs } from "./sources/linkedin.js";
-import { sendMessage } from "./notifier/telegram.js";
+import { sendMessage, voteKeyboard } from "./notifier/telegram.js";
+import { collectFeedback, loadFeedback, sourcePrecision } from "./feedback.js";
 import type { Job } from "./job.js";
 
 interface Source {
@@ -18,8 +20,9 @@ const SOURCES: Source[] = [
 ];
 
 function formatJob(job: Job): string {
+  const { score } = scoreJob(job);
   const location = job.location || "local nao informado";
-  return `${job.title}\n${job.company} · ${location}\n${job.url}`;
+  return `[relevância ${score}/10]\n${job.title}\n${job.company} · ${location}\n${job.url}`;
 }
 
 async function main(): Promise<void> {
@@ -56,7 +59,7 @@ async function main(): Promise<void> {
       continue;
     }
 
-    await sendMessage(token, chatId, formatJob(job));
+    await sendMessage(token, chatId, formatJob(job), voteKeyboard(job.source));
     markNotified(state, key);
     notified++;
   }
@@ -71,12 +74,32 @@ async function main(): Promise<void> {
     );
   }
 
+  let feedback: unknown = null;
+  if (token) {
+    try {
+      const { collected } = await collectFeedback(token);
+      const feedbackState = loadFeedback();
+      const precision: Record<string, unknown> = {};
+      for (const source of SOURCES) {
+        const p = sourcePrecision(feedbackState.votes, source.name);
+        precision[source.name] = p;
+        console.log(
+          `[precision] ${source.name}: ${p.like}/${p.total} (${(p.precision * 100).toFixed(0)}%)`,
+        );
+      }
+      feedback = { collected, precision };
+    } catch (error) {
+      console.warn(`[feedback] falha ao coletar: ${String(error)}`);
+    }
+  }
+
   console.log(
     JSON.stringify({
       fetched: allJobs.length,
       accepted,
       notified,
       failures,
+      feedback,
     }),
   );
 }

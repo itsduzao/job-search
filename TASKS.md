@@ -1,6 +1,6 @@
 # Implementation Plan (Whole System)
 
-**Status:** MVP core complete (all Fase 0–8 code implemented; 22/22 tests green). Backlog B1–B3 done; B4–B5 pending. Remaining: Telegram/secret setup, public push, and backlog B4–B5.
+**Status:** MVP core complete (all Fase 0–8 code implemented; 25/25 tests green). Backlog B1–B4 done; B5 pending. Remaining: Telegram/secret setup, public push, and backlog B5–B6.
 
 **Last Updated:** 2026-09-16
 
@@ -15,10 +15,11 @@
 | Matcher (nível → stack → local) | PRD §5, §7.3 | `src/matcher.ts` | — | `tests/matcher.test.ts` ✅ |
 | Dedup / state | PRD §7.4, §7.6 | `src/dedup.ts` | — | `data/jobs.json` ✅, `tests/dedup.test.ts` ✅ |
 | Sources | PRD §6 | `src/sources/*` | — | — ✅ (github ✅, eureca ✅, linkedin ✅) |
-| Notifier (Telegram) | PRD §7.5 | `src/notifier/telegram.ts` | — | — ✅ |
+| Notifier (Telegram) | PRD §7.5 | `src/notifier/telegram.ts` | — | — ✅ (+ 👍/👎 keyboard ✅) |
+| Scoring / feedback | PRD §12 (B4) | `src/scoring.ts`, `src/feedback.ts` | — | `data/feedback.json` ✅, `tests/scoring.test.ts` ✅ |
 | Orchestration | PRD §7 | `src/index.ts` | — | — ✅ |
 | CI/CD | PRD §8–§9 | `.github/workflows/*` | — | `radar.yml`, `testes.yml` ✅ |
-| Backlog (fase 2) | PRD §12 | — | — | — ⏳ (B1 ✅, B2 ✅, B3 ✅, B4–B5 ⏳, B6 ⏳) |
+| Backlog (fase 2) | PRD §12 | — | — | — ⏳ (B1 ✅, B2 ✅, B3 ✅, B4 ✅, B5–B6 ⏳) |
 
 ## Phased Plan
 
@@ -176,7 +177,7 @@
 - [x] B1 — Eureca scraper (`https://candidate-api.eureca.me/programs`, list + detail) — `src/sources/eureca.ts` ✅
 - [x] B2 — LinkedIn guest endpoint (rate-limit mitigation + second pass) — `src/sources/linkedin.ts` ✅ (see below)
 - [x] B3 — SIARE/UFSC + FEPESE (login/PDF; decide automate vs manual) — documented in `specs/manual-sources.md` ✅ (SIARE manual; FEPESE-vagas automatable → B6)
-- [ ] B4 — Relevance score (1–10) + Telegram 👍/👎, per-source precision
+- [x] B4 — Relevance score (1–10) + Telegram 👍/👎, per-source precision — `src/scoring.ts`, `src/feedback.ts`, `data/feedback.json` ✅
 - [ ] B5 — Ranked daily digest (high-relevance immediate + digest)
 - [ ] B6 — FEPESE "vagas" source via WordPress REST API (discovered in B3: `https://fepese.org.br/wp-json/wp/v2/vaga`, public JSON, no login) — new
 
@@ -186,8 +187,8 @@
 ## Verification Log
 
 - `2026-09-16: npm run typecheck` — exit 0, no TS errors.
-- `2026-09-16: npm run test` — 22/22 pass (`matcher` + `dedup` + `linkedin`), 0 fail.
-- `2026-09-16: npm run dev` (no token) — dry-run OK: `{fetched: 98, accepted: 12, notified: 0, failures: []}`, exit 0 (61 GitHub + 7 Eureca + LinkedIn real jobs).
+- `2026-09-16: npm run test` — 25/25 pass (`matcher` + `dedup` + `linkedin` + `scoring`), 0 fail.
+- `2026-09-16: npm run dev` (no token) — dry-run OK: `{fetched: 98, accepted: 12, notified: 0, failures: [], feedback: null}`, exit 0.
 - `2026-09-16: npm run dev` (no token) — dry-run OK: `{fetched: 68, accepted: 4, notified: 0, failures: []}`, exit 0 (61 GitHub + 7 Eureca; `fetchEurecaJobs` returns real programs).
 - `2026-09-16: git status` — repo on `master` with **no commits**; all files untracked.
 - `2026-09-16: data/jobs.json` — unchanged after dry-run (`{ "seen": {} }`), confirming dry-run does not persist.
@@ -206,9 +207,9 @@
 | 6 — Orchestration | ✅ Complete |
 | 7 — CI/CD | ⚠ Workflows done, secrets pending |
 | 8 — MVP readiness | ⚠ Code done, deploy pending |
-| 9 — Backlog (fase 2) | ⚠ B1–B3 done; B4–B6 pending |
+| 9 — Backlog (fase 2) | ⚠ B1–B4 done; B5–B6 pending |
 
-**Remaining effort:** configure Telegram/GitHub secrets + BotFather; first public commit; implement backlog B4–B6.
+**Remaining effort:** configure Telegram/GitHub secrets + BotFather; first public commit; implement backlog B5–B6.
 
 ## Known Existing Work
 
@@ -220,6 +221,9 @@
 - `src/sources/eureca.ts` — Eureca scraper (`candidate-api.eureca.me`).
 - `src/sources/linkedin.ts` — LinkedIn guest source (`seeMoreJobPostings`), rate-limit mitigation + `parseLinkedInHtml` (B2).
 - `tests/linkedin.test.ts` — LinkedIn HTML parser tests (2).
+- `src/scoring.ts` — `scoreJob` (1–10) + reasons; `tests/scoring.test.ts` (3 tests).
+- `src/feedback.ts` — `collectFeedback` (getUpdates polling) + `sourcePrecision`; state in `data/feedback.json`.
+- `src/notifier/telegram.ts` — `sendMessage` agora aceita `reply_markup` (inline keyboard 👍/👎 via `voteKeyboard`).
 - `src/notifier/telegram.ts` — `sendMessage`.
 - `src/index.ts` — full cycle orchestration + dry-run + all-sources-failed alert.
 - `.github/workflows/radar.yml`, `.github/workflows/testes.yml` — cron + CI.

@@ -24,6 +24,14 @@ export const SENIOR_REJECT = [
   "sr",
 ];
 
+export const JUNIOR_LEVEL = [
+  "junior",
+  "estagio",
+  "estagiario",
+  "trainee",
+  "aprendiz",
+];
+
 export const NODE_CORE = [
   "node",
   "nodejs",

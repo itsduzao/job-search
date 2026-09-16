@@ -1,0 +1,19 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/opencode:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/devcontainers-extra/features/opencode@sha256:7c15617cc9e501bc218097adc4910a00f81ed52fc5a5eef463aa1cc01317f9ba",
+      "integrity": "sha256:7c15617cc9e501bc218097adc4910a00f81ed52fc5a5eef463aa1cc01317f9ba"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "1.3.8",
+      "resolved": "ghcr.io/devcontainers/features/git@sha256:fd75977de13a9979000e0e78baf949adb0ca71d2398995fa22e0a36d7e7e7fe2",
+      "integrity": "sha256:fd75977de13a9979000e0e78baf949adb0ca71d2398995fa22e0a36d7e7e7fe2"
+    },
+    "ghcr.io/iyaki/devcontainer-features/opencode-ralph:1": {
+      "version": "1.1.1",
+      "resolved": "ghcr.io/iyaki/devcontainer-features/opencode-ralph@sha256:7f70fdad89d269094e1dc1515317bdd9ef6eeab15115bc2bfb318519e59e3797",
+      "integrity": "sha256:7f70fdad89d269094e1dc1515317bdd9ef6eeab15115bc2bfb318519e59e3797"
+    }
+  }
+}

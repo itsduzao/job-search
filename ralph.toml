@@ -1,0 +1,8 @@
+max-iterations = 25
+specs-dir = "specs"
+specs-index-file = "README.md"
+no-specs-index = false
+implementation-plan-name = "TASKS.md"
+prompts-dir = "/specs"
+build-alias-prompt = "build-subagents"
+agent = "opencode"

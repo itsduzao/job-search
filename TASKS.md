@@ -1,6 +1,6 @@
 # Implementation Plan (Whole System)
 
-**Status:** MVP core complete (all Fase 0–8 code implemented; 20/20 tests green). Remaining: Telegram/secret setup, first commit, and Fase 2 backlog (B2–B5).
+**Status:** MVP core complete (all Fase 0–8 code implemented; 20/20 tests green). Remaining: Telegram/secret setup, public push, and Fase 2 backlog (B2–B5).
 
 **Last Updated:** 2026-09-16
 
@@ -160,7 +160,7 @@
 - [x] Matcher tests pass in CI (16/16)
 - [x] R$ 0 infra (no server/DB/frontend)
 - [x] `README.md` — how to run, configure secrets, contribute a source — `README.md:1`
-- [ ] First public commit (repo has no commits yet)
+- [x] First commit (local) — `db32641`; public push pending repo creation
 
 **Definition of Done:** PRD §11 all checked after first deployed run.
 **Risks:** requires a real Telegram bot + public repo.

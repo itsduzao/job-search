@@ -2,6 +2,7 @@ import { loadState, saveState, isNew, markNotified, dedupKey } from "./dedup.js"
 import { match } from "./matcher.js";
 import { fetchGithubJobs } from "./sources/github-lists.js";
 import { fetchEurecaJobs } from "./sources/eureca.js";
+import { fetchLinkedinJobs } from "./sources/linkedin.js";
 import { sendMessage } from "./notifier/telegram.js";
 import type { Job } from "./job.js";
 
@@ -13,6 +14,7 @@ interface Source {
 const SOURCES: Source[] = [
   { name: "github", fetch: fetchGithubJobs },
   { name: "eureca", fetch: fetchEurecaJobs },
+  { name: "linkedin", fetch: fetchLinkedinJobs },
 ];
 
 function formatJob(job: Job): string {

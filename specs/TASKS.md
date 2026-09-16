@@ -85,4 +85,4 @@ Cada task é pequena, tem critério de aceite e pode ser feita em um commit. Ord
 - [x] **B3** SIARE/UFSC e FEPESE (avaliar login/PDF; decidir automatizar vs manual). → `specs/manual-sources.md` (SIARE manual; FEPESE-vagas automatizável via WP REST).
 - [x] **B4** Score de relevância (1–10) e botão 👍/👎 no Telegram, medindo precisão por fonte.
 - [x] **B5** Resumo diário ranqueado (alta relevância imediata + digest).
-- [ ] **B6** Fonte FEPESE "vagas" via API REST do WordPress (`/wp-json/wp/v2/vaga`, pública, sem login).
+- [x] **B6** Fonte FEPESE "vagas" via API REST do WordPress (`/wp-json/wp/v2/vaga`, pública, sem login).

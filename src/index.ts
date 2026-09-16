@@ -4,6 +4,7 @@ import { scoreJob } from "./scoring.js";
 import { fetchGithubJobs } from "./sources/github-lists.js";
 import { fetchEurecaJobs } from "./sources/eureca.js";
 import { fetchLinkedinJobs } from "./sources/linkedin.js";
+import { fetchFepeseJobs } from "./sources/fepese.js";
 import { sendMessage, voteKeyboard } from "./notifier/telegram.js";
 import { collectFeedback, loadFeedback, sourcePrecision } from "./feedback.js";
 import {
@@ -24,6 +25,7 @@ const SOURCES: Source[] = [
   { name: "github", fetch: fetchGithubJobs },
   { name: "eureca", fetch: fetchEurecaJobs },
   { name: "linkedin", fetch: fetchLinkedinJobs },
+  { name: "fepese", fetch: fetchFepeseJobs },
 ];
 
 function formatJob(job: Job): string {

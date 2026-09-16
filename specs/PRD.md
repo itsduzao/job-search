@@ -67,7 +67,7 @@ Homônimos tratados: `São José dos Campos`, `São José do Rio Preto`, `São J
 | GitHub (backend-br/vagas e similares) | 1 (MVP) | Implementada |
 | Eureca | 1 (MVP) | Implementada |
 | LinkedIn | 2 | Implementada (guest endpoint, risco documentado) |
-| FEPESE (vagas) | 2 | Automatizável via WordPress REST (`/wp-json/wp/v2/vaga`) — backlog B6 |
+| FEPESE (vagas) | 2 | Implementada (WordPress REST `/wp-json/wp/v2/vaga`) |
 | SIARE/UFSC | 2 | Manual (login/portal) — ver `specs/manual-sources.md` |
 | FEPESE (concursos/editais) | 2 | Manual (PDF) — ver `specs/manual-sources.md` |
 

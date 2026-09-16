@@ -1,6 +1,6 @@
 # Implementation Plan (Whole System)
 
-**Status:** MVP core complete (all Fase 0–8 code implemented; 30/30 tests green). Backlog B1–B5 done; B6 pending. Remaining: Telegram/secret setup, public push, and backlog B6.
+**Status:** MVP core + backlog complete (all Fase 0–9 code implemented; 35/35 tests green). Remaining: Telegram/secret setup and public push.
 
 **Last Updated:** 2026-09-16
 
@@ -14,13 +14,13 @@
 | Filter config | PRD §5 | `src/config.ts` | — | — ✅ |
 | Matcher (nível → stack → local) | PRD §5, §7.3 | `src/matcher.ts` | — | `tests/matcher.test.ts` ✅ |
 | Dedup / state | PRD §7.4, §7.6 | `src/dedup.ts` | — | `data/jobs.json` ✅, `tests/dedup.test.ts` ✅ |
-| Sources | PRD §6 | `src/sources/*` | — | — ✅ (github ✅, eureca ✅, linkedin ✅) |
+| Sources | PRD §6 | `src/sources/*` | — | — ✅ (github ✅, eureca ✅, linkedin ✅, fepese ✅) |
 | Notifier (Telegram) | PRD §7.5 | `src/notifier/telegram.ts` | — | — ✅ (+ 👍/👎 keyboard ✅) |
 | Scoring / feedback | PRD §12 (B4) | `src/scoring.ts`, `src/feedback.ts` | — | `data/feedback.json` ✅, `tests/scoring.test.ts` ✅ |
 | Digest diário | PRD §12 (B5) | `src/digest.ts` | — | `data/digest.json` ✅, `tests/digest.test.ts` ✅ |
 | Orchestration | PRD §7 | `src/index.ts` | — | — ✅ |
 | CI/CD | PRD §8–§9 | `.github/workflows/*` | — | `radar.yml`, `testes.yml` ✅ |
-| Backlog (fase 2) | PRD §12 | — | — | — ⏳ (B1 ✅, B2 ✅, B3 ✅, B4 ✅, B5 ✅, B6 ⏳) |
+| Backlog (fase 2) | PRD §12 | — | — | — ✅ (B1–B6) |
 
 ## Phased Plan
 
@@ -171,7 +171,7 @@
 
 **Goal:** extend sources and relevance features per PRD §12.
 
-**Status:** Not started.
+**Status:** Complete (B1–B6).
 
 **Paths:** `src/sources/*`, `src/notifier/*`, `src/index.ts`
 
@@ -180,7 +180,7 @@
 - [x] B3 — SIARE/UFSC + FEPESE (login/PDF; decide automate vs manual) — documented in `specs/manual-sources.md` ✅ (SIARE manual; FEPESE-vagas automatable → B6)
 - [x] B4 — Relevance score (1–10) + Telegram 👍/👎, per-source precision — `src/scoring.ts`, `src/feedback.ts`, `data/feedback.json` ✅
 - [x] B5 — Ranked daily digest (high-relevance immediate + digest) — `src/digest.ts`, `data/digest.json`, `RELEVANCE_THRESHOLD=7` ✅
-- [ ] B6 — FEPESE "vagas" source via WordPress REST API (discovered in B3: `https://fepese.org.br/wp-json/wp/v2/vaga`, public JSON, no login) — new
+- [x] B6 — FEPESE "vagas" source via WordPress REST API (`https://fepese.org.br/wp-json/wp/v2/vaga`, public JSON, no login) — `src/sources/fepese.ts` ✅ (list + `X-WP-TotalPages` pagination, `parseVagaItem` + 5 tests)
 
 **Definition of Done:** each source follows `Source` contract in `src/index.ts`; matcher tests extended.
 **Risks:** LinkedIn/SIARE/FEPESE scraping fragility (PRD §10).
@@ -194,6 +194,8 @@
 - `2026-09-16: git status` — repo on `master` with **no commits**; all files untracked.
 - `2026-09-16: data/jobs.json` — unchanged after dry-run (`{ "seen": {} }`), confirming dry-run does not persist.
 - `2026-09-16: re-verify` — `npm run typecheck` exit 0; `npm run test` 20/20 pass. `tests/dedup.test.ts` added; `normalize` test now asserts `SÃO JOSÉ`/`Sao.Jose`.
+- `2026-09-16: B6` — `npm run typecheck` exit 0; `npm run test` 35/35 pass (added `tests/fepese.test.ts`, 5 tests). FEPESE API verified live: `GET /wp-json/wp/v2/vaga?per_page=100` → `X-WP-Total: 291`, `X-WP-TotalPages: 3`.
+- `2026-09-16: npm run dev` (no token) — dry-run OK: `{fetched: 389, accepted: 14, notified: 0, digested: 0, digestSent: 0, failures: [], feedback: null}`; FEPESE jobs flow through the matcher (e.g. "1015-Bolsa de Graduação-Desenvolvedores de Sistema" → Florianópolis).
 
 ## Summary
 
@@ -208,9 +210,9 @@
 | 6 — Orchestration | ✅ Complete |
 | 7 — CI/CD | ⚠ Workflows done, secrets pending |
 | 8 — MVP readiness | ⚠ Code done, deploy pending |
-| 9 — Backlog (fase 2) | ⚠ B1–B5 done; B6 pending |
+| 9 — Backlog (fase 2) | ✅ Complete (B1–B6) |
 
-**Remaining effort:** configure Telegram/GitHub secrets + BotFather; first public commit; implement backlog B6 (FEPESE WordPress source).
+**Remaining effort:** configure Telegram/GitHub secrets + BotFather; first public commit. (All code tasks complete, including backlog B6.)
 
 ## Known Existing Work
 
@@ -221,7 +223,9 @@
 - `src/sources/github-lists.ts` — GitHub issues source (configurable repos, PR skip, token).
 - `src/sources/eureca.ts` — Eureca scraper (`candidate-api.eureca.me`).
 - `src/sources/linkedin.ts` — LinkedIn guest source (`seeMoreJobPostings`), rate-limit mitigation + `parseLinkedInHtml` (B2).
+- `src/sources/fepese.ts` — FEPESE "vagas" source (WordPress REST `/wp-json/wp/v2/vaga`), `parseVagaItem` + `fetchFepeseJobs` with `X-WP-TotalPages` pagination (B6).
 - `tests/linkedin.test.ts` — LinkedIn HTML parser tests (2).
+- `tests/fepese.test.ts` — FEPESE `parseVagaItem` tests (5).
 - `src/scoring.ts` — `scoreJob` (1–10) + reasons; `tests/scoring.test.ts` (3 tests).
 - `src/feedback.ts` — `collectFeedback` (getUpdates polling) + `sourcePrecision`; state in `data/feedback.json`.
 - `src/notifier/telegram.ts` — `sendMessage` agora aceita `reply_markup` (inline keyboard 👍/👎 via `voteKeyboard`).

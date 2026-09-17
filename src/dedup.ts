@@ -19,8 +19,19 @@ export function saveState(state: State): void {
   writeFileSync(DB_PATH, `${JSON.stringify(state, null, 2)}\n`);
 }
 
+function canonicalUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.search = "";
+    parsed.hash = "";
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 export function dedupKey(job: Job): string {
-  const base = job.url ? job.url : `${job.company}|${job.title}`;
+  const base = job.url ? canonicalUrl(job.url) : `${job.company}|${job.title}`;
   return normalize(base);
 }
 

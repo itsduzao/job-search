@@ -37,6 +37,8 @@ Cada task é pequena, tem critério de aceite e pode ser feita em um commit. Ord
   - *Aceite:* teste de que a mesma vaga (mesma url) não é considerada nova duas vezes.
 - [x] **T3.2** Suportar `JOBS_DB_PATH` (para testar sem tocar no histórico real).
   - *Aceite:* rodar com banco temporário não altera `data/jobs.json`.
+- [x] **T3.3** `dedupKey` usa URL canônica (sem query/hash) para não tratar tracking do LinkedIn (`refId`/`trackingId`) como vaga nova.
+  - *Aceite:* testes de que a mesma vaga com tracking diferente gera a mesma chave e de que vagas distintas no mesmo host geram chaves diferentes.
 
 ## Fase 4 — Fontes
 

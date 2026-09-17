@@ -36,6 +36,7 @@ npm run test
 
 ## Documentação
 
+- [AGENTS.md](AGENTS.md) — guia para agentes: manter a documentação atualizada
 - [Specs](specs/README.md)
   - [PRD](specs/PRD.md)
   - [Tasks de implementação](specs/TASKS.md)

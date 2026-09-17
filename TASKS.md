@@ -1,8 +1,8 @@
 # Implementation Plan (Whole System)
 
-**Status:** MVP core + backlog complete (all Fase 0–9 code implemented; 35/35 tests green). Remaining: Telegram/secret setup and public push.
+**Status:** MVP core + backlog complete (all Fase 0–9 code implemented; 37/37 tests green). Remaining: Telegram/secret setup and public push.
 
-**Last Updated:** 2026-09-16
+**Last Updated:** 2026-09-17
 
 **Primary spec:** [specs/PRD.md](specs/PRD.md) · task breakdown: [specs/TASKS.md](specs/TASKS.md)
 
@@ -13,7 +13,7 @@
 | Job model | PRD §5, §7.2 | `src/job.ts` | — | — ✅ |
 | Filter config | PRD §5 | `src/config.ts` | — | — ✅ |
 | Matcher (nível → stack → local) | PRD §5, §7.3 | `src/matcher.ts` | — | `tests/matcher.test.ts` ✅ |
-| Dedup / state | PRD §7.4, §7.6 | `src/dedup.ts` | — | `data/jobs.json` ✅, `tests/dedup.test.ts` ✅ |
+| Dedup / state | PRD §7.4, §7.6 | `src/dedup.ts` | — | `data/jobs.json` ✅, `tests/dedup.test.ts` ✅ (URL canônica) |
 | Sources | PRD §6 | `src/sources/*` | — | — ✅ (github ✅, eureca ✅, linkedin ✅, fepese ✅) |
 | Notifier (Telegram) | PRD §7.5 | `src/notifier/telegram.ts` | — | — ✅ (+ 👍/👎 keyboard ✅) |
 | Scoring / feedback | PRD §12 (B4) | `src/scoring.ts`, `src/feedback.ts` | — | `data/feedback.json` ✅, `tests/scoring.test.ts` ✅ |
@@ -84,8 +84,10 @@
 
 - [x] `loadState` / `saveState` / `dedupKey` (url else `company|title`) / `isNew` / `markNotified` — `src/dedup.ts:11`
 - [x] `JOBS_DB_PATH` env override — `src/dedup.ts:9`
-- [x] Test that the same URL is not considered new twice (T3.1) + temp `JOBS_DB_PATH` (T3.2) — `tests/dedup.test.ts`
+- [x] `dedupKey` usa URL canônica (remove query/hash) — evita re-notificar LinkedIn por `refId`/`trackingId` voláteis — `src/dedup.ts:22`
+- [x] Test that the same URL is not considered new twice (T3.1) + temp `JOBS_DB_PATH` (T3.2) + URL canônica — `tests/dedup.test.ts`
 **Risks:** `loadState` reads `JOBS_DB_PATH` at module load time — env must be set before import.
+**Migration:** chaves antigas do LinkedIn (com query) não batem com as novas; vagas já vistas podem ser re-notificadas **uma vez** após o deploy.
 
 ### Phase 4 — Sources
 
@@ -196,6 +198,9 @@
 - `2026-09-16: re-verify` — `npm run typecheck` exit 0; `npm run test` 20/20 pass. `tests/dedup.test.ts` added; `normalize` test now asserts `SÃO JOSÉ`/`Sao.Jose`.
 - `2026-09-16: B6` — `npm run typecheck` exit 0; `npm run test` 35/35 pass (added `tests/fepese.test.ts`, 5 tests). FEPESE API verified live: `GET /wp-json/wp/v2/vaga?per_page=100` → `X-WP-Total: 291`, `X-WP-TotalPages: 3`.
 - `2026-09-16: npm run dev` (no token) — dry-run OK: `{fetched: 389, accepted: 14, notified: 0, digested: 0, digestSent: 0, failures: [], feedback: null}`; FEPESE jobs flow through the matcher (e.g. "1015-Bolsa de Graduação-Desenvolvedores de Sistema" → Florianópolis).
+- `2026-09-17: npm run typecheck` — exit 0, no TS errors.
+- `2026-09-17: npm run test` — 37/37 pass (added 2 `dedup` tests: query/hash ignorados, vagas distintas no mesmo host).
+- `2026-09-17: workflow actions` — `actions/checkout` e `actions/setup-node` atualizados de `v4` para `v5` (Node 24) em `radar.yml` e `testes.yml`; remove o warning de deprecação do Node 20.
 
 ## Summary
 
@@ -204,7 +209,7 @@
 | 0 — Foundation | ✅ Complete |
 | 1 — Model & config | ✅ Complete |
 | 2 — Matcher | ✅ Complete (16 tests) |
-| 3 — Dedup & state | ✅ Complete (4 tests) |
+| 3 — Dedup & state | ✅ Complete (6 tests) |
 | 4 — Sources | ✅ GitHub + Eureca |
 | 5 — Telegram | ✅ Complete |
 | 6 — Orchestration | ✅ Complete |
@@ -219,7 +224,7 @@
 - `src/job.ts` — `Job`, `MatchResult`, `LocationConfidence` types.
 - `src/config.ts` — all filter rule lists (noise, level, stack, location, homonyms).
 - `src/matcher.ts` — `normalize`, `match` (level → stack → location).
-- `src/dedup.ts` — state load/save + dedup key + `isNew`/`markNotified`, `JOBS_DB_PATH`.
+- `src/dedup.ts` — state load/save + dedup key (URL canônica, sem query/hash) + `isNew`/`markNotified`, `JOBS_DB_PATH`.
 - `src/sources/github-lists.ts` — GitHub issues source (configurable repos, PR skip, token).
 - `src/sources/eureca.ts` — Eureca scraper (`candidate-api.eureca.me`).
 - `src/sources/linkedin.ts` — LinkedIn guest source (`seeMoreJobPostings`), rate-limit mitigation + `parseLinkedInHtml` (B2).
@@ -240,6 +245,7 @@
 - GitHub `company` field is the repo owner (`backend-br`), not the actual employer; titles may include `[Remoto]`/`(Company)` noise (seen in dry-run output).
 - `PL` abbreviation for "pleno" is not rejected by `levelOk` (config lacks `pl`).
 - No tests for `telegram.ts`, sources, or orchestration.
+- `markNotified` grava `firstSeen` e `notifiedAt` com o mesmo instante, então `firstSeen` não distingue a primeira visualização.
 
 ## Manual Deployment Tasks
 

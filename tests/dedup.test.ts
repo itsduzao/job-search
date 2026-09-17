@@ -28,6 +28,22 @@ test("dedupKey usa url normalizada quando presente", () => {
   assert.equal(dedup.dedupKey(job({ url })), normalize(url));
 });
 
+test("dedupKey ignora query string e hash (tracking do LinkedIn)", () => {
+  const a = job({
+    url: "https://www.linkedin.com/jobs/view/dev-node-123?position=1&refId=AAA&trackingId=BBB",
+  });
+  const b = job({
+    url: "https://www.linkedin.com/jobs/view/dev-node-123?position=9&refId=CCC&trackingId=DDD#top",
+  });
+  assert.equal(dedup.dedupKey(a), dedup.dedupKey(b));
+});
+
+test("dedupKey distingue vagas diferentes no mesmo host", () => {
+  const a = job({ url: "https://www.linkedin.com/jobs/view/dev-node-123" });
+  const b = job({ url: "https://www.linkedin.com/jobs/view/dev-node-456" });
+  assert.notEqual(dedup.dedupKey(a), dedup.dedupKey(b));
+});
+
 test("dedupKey cai para company|title quando url vazia", () => {
   const j = job({ company: "Acme", title: "Dev Node Júnior", url: "" });
   assert.equal(dedup.dedupKey(j), normalize(`${j.company}|${j.title}`));

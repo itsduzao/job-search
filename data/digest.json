@@ -1,4 +1,15 @@
 {
   "lastSentAt": "2026-09-18T04:17:06.795Z",
-  "queue": []
+  "queue": [
+    {
+      "key": "https www linkedin com jobs view software engineer backend at robinhood 4443622465",
+      "title": "Software Engineer, Backend",
+      "company": "Robinhood",
+      "location": "Menlo Park, Califórnia, Estados Unidos",
+      "url": "https://www.linkedin.com/jobs/view/software-engineer-backend-at-robinhood-4443622465?position=1&pageNum=5&refId=ZU4eSKyBPjvESukmnZUSUA%3D%3D&trackingId=nFP6tqwZuiApEmWcjFd7%2BQ%3D%3D",
+      "score": 4,
+      "source": "linkedin",
+      "queuedAt": "2026-09-18T10:58:56.813Z"
+    }
+  ]
 }

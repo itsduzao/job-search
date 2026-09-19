@@ -1,25 +1,4 @@
 {
-  "lastSentAt": "2026-09-18T04:17:06.795Z",
-  "queue": [
-    {
-      "key": "https www linkedin com jobs view software engineer backend at robinhood 4443622465",
-      "title": "Software Engineer, Backend",
-      "company": "Robinhood",
-      "location": "Menlo Park, Califórnia, Estados Unidos",
-      "url": "https://www.linkedin.com/jobs/view/software-engineer-backend-at-robinhood-4443622465?position=1&pageNum=5&refId=ZU4eSKyBPjvESukmnZUSUA%3D%3D&trackingId=nFP6tqwZuiApEmWcjFd7%2BQ%3D%3D",
-      "score": 4,
-      "source": "linkedin",
-      "queuedAt": "2026-09-18T10:58:56.813Z"
-    },
-    {
-      "key": "https www linkedin com jobs view software engineer back end new york at edra 4385013703",
-      "title": "Software Engineer - Back End (New York)",
-      "company": "Edra",
-      "location": "Nova York, Nova York, Estados Unidos",
-      "url": "https://www.linkedin.com/jobs/view/software-engineer-back-end-new-york-at-edra-4385013703?position=1&pageNum=5&refId=XxrpJeEXsH7no%2B5lde73%2FA%3D%3D&trackingId=UhRKv8pnq4b6cGSuOOQSMQ%3D%3D",
-      "score": 4,
-      "source": "linkedin",
-      "queuedAt": "2026-09-18T20:45:11.117Z"
-    }
-  ]
+  "lastSentAt": "2026-09-19T04:14:04.182Z",
+  "queue": []
 }

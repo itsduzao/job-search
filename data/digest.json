@@ -1,4 +1,15 @@
 {
   "lastSentAt": "2026-09-28T04:56:36.213Z",
-  "queue": []
+  "queue": [
+    {
+      "key": "https www linkedin com jobs view software engineer backend at robinhood 4443625312",
+      "title": "Software Engineer, Backend",
+      "company": "Robinhood",
+      "location": "Nova York, Nova York, Estados Unidos",
+      "url": "https://www.linkedin.com/jobs/view/software-engineer-backend-at-robinhood-4443625312?position=10&pageNum=0&refId=1vh%2FJOtXArNkgyorHs3Kaw%3D%3D&trackingId=EGJLBmkrE3ga0kokQoVftg%3D%3D",
+      "score": 4,
+      "source": "linkedin",
+      "queuedAt": "2026-09-28T21:10:22.234Z"
+    }
+  ]
 }

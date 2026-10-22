@@ -1,4 +1,15 @@
 {
   "lastSentAt": "2026-10-22T04:17:36.893Z",
-  "queue": []
+  "queue": [
+    {
+      "key": "https www linkedin com jobs view full stack developer at guidehouse 4482181577",
+      "title": "Full Stack Developer",
+      "company": "Guidehouse",
+      "location": "San António, Texas, Estados Unidos",
+      "url": "https://www.linkedin.com/jobs/view/full-stack-developer-at-guidehouse-4482181577?position=1&pageNum=2&refId=WBNFiZJZDJTbFIu9NxuSng%3D%3D&trackingId=wp8H3QWQMcKbhKouWlQIcQ%3D%3D",
+      "score": 4,
+      "source": "linkedin",
+      "queuedAt": "2026-10-22T21:24:58.027Z"
+    }
+  ]
 }

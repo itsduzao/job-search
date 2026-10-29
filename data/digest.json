@@ -1,4 +1,15 @@
 {
   "lastSentAt": "2026-10-29T00:43:33.348Z",
-  "queue": []
+  "queue": [
+    {
+      "key": "https www linkedin com jobs view full stack developer project software engineer iii ts sci clearance at deloitte 4460186913",
+      "title": "Full Stack Developer - PROJECT - Software Engineer III - TS/SCI clearance",
+      "company": "Deloitte",
+      "location": "Arlington, Virgínia, Estados Unidos",
+      "url": "https://www.linkedin.com/jobs/view/full-stack-developer-project-software-engineer-iii-ts-sci-clearance-at-deloitte-4460186913?position=8&pageNum=5&refId=ReOCRoutqogZCwMK5Q0i%2Bw%3D%3D&trackingId=UhHOiaENhy4ESjpv2F%2FvJQ%3D%3D",
+      "score": 4,
+      "source": "linkedin",
+      "queuedAt": "2026-10-29T09:44:06.087Z"
+    }
+  ]
 }
